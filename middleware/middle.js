@@ -1,40 +1,28 @@
-const validator = require("email-validator");
-const sendRes = require("../modules/universal-res");
-const bcrypt = require("bcrypt");
-
-function hasUpperCase(str) {
-  return str !== str.toLowerCase();
-}
+const validator = require('email-validator');
+const sendRes = require('../modules/universal-res');
 
 module.exports = {
+  // eslint-disable-next-line consistent-return
   emailValid: (req, res, next) => {
     const { email } = req.body;
-    if (!validator.validate(email))
-      return sendRes(res, true, "bad email", null);
+    if (!validator.validate(email)) { return sendRes(res, true, 'Email must include @', null); }
 
     next();
   },
-  passwordValid: (req, res, next) => {
-    const { password, confirmPassword } = req.body;
-
-    if (password !== confirmPassword)
-      return sendRes(res, true, "passwords do not match", null);
-
-    if (confirmPassword.length < 5 || confirmPassword.length > 100)
-      return sendRes(res, true, "bad password input", null);
-
-    if (password.length < 5 || password.length > 100)
-      return sendRes(res, true, "password is too long or too short", null);
-
+  // eslint-disable-next-line consistent-return
+  nameValid: (req, res, next) => {
+    const { name } = req.body;
+    if (name.length < 4 || name.length > 30) {
+      return sendRes(res, true, 'Name is too short.', null);
+    }
     next();
   },
-  hasUpperCase: async (req, res, next) => {
-    const { name, surname } = req.body;
-    if (!hasUpperCase(name))
-      return sendRes(res, true, "needs one uppercase letter", null);
-    if (!hasUpperCase(surname))
-      return sendRes(res, true, "needs one uppercase letter", null);
-
+  // eslint-disable-next-line consistent-return
+  messageValid: (req, res, next) => {
+    const { message } = req.body;
+    if (message.length < 3) {
+      return sendRes(res, true, 'Message is too short.', null);
+    }
     next();
   },
 };
